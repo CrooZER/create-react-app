@@ -2,6 +2,36 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+
+function Welcome(data) {
+  return <h2>Hi, {data.name}</h2>;
+}
+
+class Clock extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {date: new Date()};
+    this.title = 'Time ';
+    this.matches = [];
+  }
+
+  componentDidMount() {
+    this.timerID = setInterval(
+        () => this.tick(), 1000
+     )
+  }
+
+  tick() {
+    this.setState({
+      date : new Date()
+    });
+  }
+
+  render() {
+    return ( <div> {this.title} - {this.state.date.toLocaleTimeString()}</div>);
+  }
+}
+
 class App extends Component {
   render() {
     return (
@@ -19,10 +49,15 @@ class App extends Component {
           >
             Learn React
           </a>
+          <Welcome name="willcomen"/>
+          <Welcome name="willcos"/>
+        <Clock/>
         </header>
       </div>
     );
   }
 }
+
+
 
 export default App;
