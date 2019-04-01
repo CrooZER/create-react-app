@@ -45,11 +45,15 @@ class App extends Component {
 
         fetch('https://api.opendota.com/api/proPlayers').then(
             results => {
-                this.setState({players: results});
+                console.log(results);
+                return results.json();
             }
         ).then(
             data => {
                 let players = data;
+                this.onPlayersChange(players);
+                console.log(this.state.query);
+                this.onFilteredChange(players, this.state.query);
                 this.setState({players: players});
                 localStorage.setItem('players', JSON.stringify(players));
             }
