@@ -45,7 +45,7 @@ class App extends Component {
 
         fetch('https://api.opendota.com/api/proPlayers').then(
             results => {
-                // this.props.onPlayersChange(results.json());
+                this.setState({players: results});
             }
         ).then(
             data => {
