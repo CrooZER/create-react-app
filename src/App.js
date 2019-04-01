@@ -1,67 +1,61 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
+import Search from './components/Search'
+import Player from './components/Player'
+import Clock from './components/Clock'
 import './App.css';
 
+function filterPlayers(players, query) {
+    return players.filter((player)  => {
+        if (query.length === 0) {
+            return true;
+        }
 
-function Welcome(data) {
-    return <h2>Hi, {data.name}</h2>;
+        return player.name.toLowerCase().includes(query);
+    })
 }
 
-class Search extends React.Component {
-    state = {
-        query: '',
-    }
-
-    handleInputChange = (e) => {
-        console.log(e.target.value.toLowerCase());
-        this.setState({
-            value: this.state.value
-        })
-
-    }
-
-    render() {
-        return (
-            <form>
-                <input type="text"
-                value={this.value}
-                       onChange={this.handleInputChange}
-                />
-            </form>
-        )
-    }
-}
-
-class Player extends React.Component {
+class App extends Component {
     constructor(props) {
         super(props);
+        this.onSearch = this.onSearch.bind(this);
         this.state = {
-            players: [],
-            filtered: []
+            query : 'u',
+            players : []
         }
     }
 
+    onPlayersChange(players) {
+        this.setState({players: players});
+    }
 
+    onFilteredChange(players, query) {
+        console.log(query);
+        this.setState({filtered: filterPlayers(players, query)});
+    }
+
+    onSearch(query) {
+        this.setState({
+            query: query
+        });
+    }
     componentDidMount() {
-
         const result = localStorage.getItem('players');
         if (result) {
-            console.log('From Cache');
-            this.setState({players: JSON.parse(result)});
-            return ;
+            this.onPlayersChange(JSON.parse(result));
+            console.log(this.state.query);
+             this.onFilteredChange(JSON.parse(result), this.state.query);
+
+            return;
         }
 
         fetch('https://api.opendota.com/api/proPlayers').then(
             results => {
-                return results.json();
+                // this.props.onPlayersChange(results.json());
             }
         ).then(
             data => {
                 let players = data;
-                console.log('players', players);
                 this.setState({players: players});
-                console.log('Save to Cache');
-
                 localStorage.setItem('players', JSON.stringify(players));
             }
         )
@@ -69,56 +63,11 @@ class Player extends React.Component {
 
     render() {
         return (
-            <div className='row'>
-                {
-                    this.state.players.map((player, i)=>
-                        <div className='playerCard col-md-4'>
-                                   <span>
-                                       {player.team_name}
-                                       <br/>
-                                       {player.name}
-                                   </span>
-                        </div>
-                    )}
-
-            </div>
-        )
-    }
-}
-
-class Clock extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {date: new Date()};
-        this.title = 'Time ';
-        this.matches = [];
-    }
-
-    componentDidMount() {
-        this.timerID = setInterval(
-            () => this.tick(), 1000
-        )
-    }
-
-    tick() {
-        this.setState({
-            date: new Date()
-        });
-    }
-
-    render() {
-        return (<div> {this.title} - {this.state.date.toLocaleTimeString()}</div>);
-    }
-}
-
-class App extends Component {
-    render() {
-        return (
-            <div className="App">
-                <Search/>
+            <div className="App" >
+                <Search onSearch={this.onSearch}/>
                 <Clock/>
                 <div className="container">
-                    <Player/>
+                    <Player players={this.state.filtered}/>
                 </div>
             </div>
         );
