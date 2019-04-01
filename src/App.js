@@ -33,17 +33,12 @@ class App extends Component {
         this.setState({filtered: filterPlayers(players, query)});
     }
 
-    onSearch(query) {
-        this.setState({
-            query: query
-        });
-    }
-    componentDidMount() {
+    getPlayers() {
         const result = localStorage.getItem('players');
         if (result) {
             this.onPlayersChange(JSON.parse(result));
             console.log(this.state.query);
-             this.onFilteredChange(JSON.parse(result), this.state.query);
+            this.onFilteredChange(JSON.parse(result), this.state.query);
 
             return;
         }
@@ -61,13 +56,29 @@ class App extends Component {
         )
     }
 
+    onSearch(query) {
+        this.setState({
+            query: query
+        });
+        this.getPlayers();
+    }
+    componentDidMount() {
+        console.log('componentDidMount', this.state.query);
+        this.getPlayers();
+
+    }
+
     render() {
         return (
             <div className="App" >
                 <Search onSearch={this.onSearch}/>
                 <Clock/>
                 <div className="container">
-                    <Player players={this.state.filtered}/>
+                    <Player
+                        players={this.state.filtered}
+                        query={this.state.query}
+                        onSearch={this.onSearch}
+                    />
                 </div>
             </div>
         );
