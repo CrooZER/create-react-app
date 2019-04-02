@@ -5,7 +5,7 @@ import Clock from './components/Clock'
 import './App.css';
 
 function filterPlayers(players, query) {
-    return players.filter((player)  => {
+    return players.filter((player) => {
         if (query.length === 0) {
             return true;
         }
@@ -17,10 +17,11 @@ function filterPlayers(players, query) {
 class App extends Component {
     constructor(props) {
         super(props);
+
         this.onSearch = this.onSearch.bind(this);
         this.state = {
-            query : 'u',
-            players : []
+            query: '',
+            players: []
         }
     }
 
@@ -35,6 +36,7 @@ class App extends Component {
 
     getPlayers() {
         const result = localStorage.getItem('players');
+        const API = 'https://api.opendota.com/api/proPlayers';
         if (result) {
             this.onPlayersChange(JSON.parse(result));
             console.log(this.state.query);
@@ -43,7 +45,7 @@ class App extends Component {
             return;
         }
 
-        fetch('https://api.opendota.com/api/proPlayers').then(
+        fetch(API).then(
             results => {
                 console.log(results);
                 return results.json();
@@ -66,15 +68,14 @@ class App extends Component {
         });
         this.getPlayers();
     }
-    componentDidMount() {
-        console.log('componentDidMount', this.state.query);
-        this.getPlayers();
 
+    componentDidMount() {
+        this.getPlayers();
     }
 
     render() {
         return (
-            <div className="App" >
+            <div className="App">
                 <Search onSearch={this.onSearch}/>
                 <Clock/>
                 <div className="container">
@@ -88,6 +89,5 @@ class App extends Component {
         );
     }
 }
-
 
 export default App;

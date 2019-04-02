@@ -7,8 +7,6 @@ class Player extends React.Component {
         this.state = {players: this.props.players};
     }
 
-    componentDidMount() {}
-
     render() {
         return (
             <div className='row'>
@@ -16,9 +14,10 @@ class Player extends React.Component {
                     this.props.players && this.props.players.map(player =>
                         <div className='playerCard col-md-4'>
                             <span>
-                                {player.team_name}
-                                    <br/>
+                                {player.team_name} - [{player.loccountrycode}]
+                                <br/>
                                 {player.name}
+
                             </span>
                         </div>
                     )}

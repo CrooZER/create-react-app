@@ -1,6 +1,4 @@
-
 import React, {Component} from 'react';
-import App from "../App";
 
 class Search extends React.Component {
 
@@ -9,6 +7,7 @@ class Search extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.state = {query: ''};
     }
+
     handleInputChange = (e) => {
         this.setState({
             query: e.target.value.toLowerCase()
